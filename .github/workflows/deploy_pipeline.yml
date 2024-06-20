@@ -44,7 +44,7 @@ jobs:
       - name: Run pipeline script
         env:
           DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
-          DATABRICKS_INSTANCE: ${{ secrets.DATABRICKS_INSTANCE }}
+          DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
           DATABRICKS_TARGET: ${{ secrets.DATABRICKS_TARGET }}
           BASE_PATH: "sql_files"
         run: |

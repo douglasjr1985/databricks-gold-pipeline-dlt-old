@@ -2,32 +2,32 @@
 
 import requests
 import json
+import os
 
 
 class DeltaLiveTablesPipeline:
-    def __init__(self, token, instance):
+    def __init__(self, token, host):
         """
         Inicializa a classe com token de autenticação e URL da instância Databricks.
 
         Args:
             token (str): Token de acesso para autenticação.
-            instance (str): URL da instância Databricks.
+            host (str): URL do host Databricks.
         """
         self.token = token
-        self.instance = instance
+        self.host = host
         self.headers = {
             "Authorization": f"Bearer {self.token}",
             "Content-Type": "application/json"
         }
 
-    def create_pipeline_payload(self, name, target, notebook_path, sql_paths, num_workers=2, trigger_interval="1 hour"):
+    def create_pipeline_payload(self, name, target, sql_paths, num_workers=2, trigger_interval="1 hour"):
         """
         Cria o payload JSON para a criação de um pipeline Delta Live Tables.
 
         Args:
             name (str): Nome do pipeline.
             target (str): Nome do alvo (target) do Delta Live Tables.
-            notebook_path (str): Caminho do notebook.
             sql_paths (list): Lista de caminhos dos arquivos SQL.
             num_workers (int): Número de trabalhadores no cluster.
             trigger_interval (str): Intervalo de gatilho para execução do pipeline.
@@ -39,11 +39,6 @@ class DeltaLiveTablesPipeline:
         return {
             "name": name,
             "target": target,
-            "notebooks": [
-                {
-                    "path": notebook_path
-                }
-            ],
             "libraries": libraries,
             "clusters": [
                 {
@@ -66,7 +61,7 @@ class DeltaLiveTablesPipeline:
         Returns:
             dict: Resposta da API.
         """
-        url = f"https://{self.instance}/api/2.0/pipelines"
+        url = f"https://{self.host}/api/2.0/pipelines"
         response = requests.post(url, headers=self.headers, data=json.dumps(payload))
 
         if response.status_code == 200:
@@ -84,7 +79,7 @@ class DeltaLiveTablesPipeline:
         Returns:
             dict: Resposta da API.
         """
-        url = f"https://{self.instance}/api/2.0/pipelines/{pipeline_id}/updates"
+        url = f"https://{self.host}/api/2.0/pipelines/{pipeline_id}/updates"
         response = requests.post(url, headers=self.headers)
 
         if response.status_code == 200:
@@ -102,7 +97,7 @@ class DeltaLiveTablesPipeline:
         Returns:
             dict: Resposta da API.
         """
-        url = f"https://{self.instance}/api/2.0/pipelines/{pipeline_id}"
+        url = f"https://{self.host}/api/2.0/pipelines/{pipeline_id}"
         response = requests.get(url, headers=self.headers)
 
         if response.status_code == 200:

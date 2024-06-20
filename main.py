@@ -6,7 +6,7 @@ from dlt_pipeline.pipeline import DeltaLiveTablesPipeline
 
 def main():
     token = os.getenv("DATABRICKS_TOKEN")
-    instance = os.getenv("DATABRICKS_INSTANCE")
+    host = os.getenv("DATABRICKS_HOST")
     target = os.getenv("DATABRICKS_TARGET")
     base_path = os.path.abspath("projects")
 
@@ -20,7 +20,7 @@ def main():
             sql_paths = [os.path.abspath(os.path.join(pipe_path, file)) for file in os.listdir(pipe_path) if file.endswith(".sql")]
 
             # Instancia a classe
-            dlt_pipeline = DeltaLiveTablesPipeline(token, instance)
+            dlt_pipeline = DeltaLiveTablesPipeline(token, host)
 
             # Criação do payload
             payload = dlt_pipeline.create_pipeline_payload(name, target, sql_paths)
